@@ -1,14 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Globe, Mail, Phone, MapPin, 
-  Award, Briefcase, GraduationCap, 
-  ChevronRight, Languages, Zap,
-  ExternalLink, Target, Coffee
-} from 'lucide-react';
+
+// Safe Inline SVG Icons (No external dependencies)
+const Icons = {
+  Zap: () => (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+  ),
+  MapPin: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+  ),
+  Target: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+  ),
+  Coffee: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+  ),
+  Award: () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+  ),
+  Languages: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg>
+  ),
+  Mail: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+  ),
+  Phone: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+  ),
+  Globe: () => (
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+  )
+};
 
 const content = {
   en: {
-    nav: ["About", "Experience", "Skills", "Contact"],
     hero: {
       tag: "International Student & Multilingual Specialist",
       title: "Bridging Cultures through Language and Resilience.",
@@ -37,7 +61,6 @@ const content = {
     },
     skills: {
       title: "Linguistic Mastery",
-      pill_lang: "Germany", // Specifically labeled as requested
       list: [
         { name: "Indonesian", level: "Native Proficiency", val: 100 },
         { name: "Mandarin", level: "Professional Working Proficiency", val: 85 },
@@ -51,7 +74,6 @@ const content = {
     }
   },
   zh: {
-    nav: ["關於", "經歷", "技能", "聯絡"],
     hero: {
       tag: "國際學生 / 多語專業人才",
       title: "以語言與韌性連結多元文化。",
@@ -80,7 +102,6 @@ const content = {
     },
     skills: {
       title: "語言能力",
-      pill_lang: "德語",
       list: [
         { name: "印尼語", level: "母語程度", val: 100 },
         { name: "普通話", level: "專業工作能力", val: 85 },
@@ -94,7 +115,6 @@ const content = {
     }
   },
   de: {
-    nav: ["Über", "Erfahrung", "Fähigkeiten", "Kontakt"],
     hero: {
       tag: "Internationaler Student & Mehrsprachiger Experte",
       title: "Verbindung von Kulturen durch Sprache und Resilienz.",
@@ -123,7 +143,6 @@ const content = {
     },
     skills: {
       title: "Sprachbeherrschung",
-      pill_lang: "Deutsch",
       list: [
         { name: "Indonesisch", level: "Muttersprachler", val: 100 },
         { name: "Mandarin", level: "Fließend in Wort und Schrift", val: 85 },
@@ -154,18 +173,17 @@ const App = () => {
       {/* --- Floating Navbar --- */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'py-4' : 'py-8'}`}>
         <div className="max-w-6xl mx-auto px-6">
-          <div className="bg-white/70 backdrop-blur-xl border border-slate-200/50 rounded-2xl p-2 flex items-center justify-between shadow-xl shadow-slate-200/50">
+          <div className="bg-white/80 backdrop-blur-xl border border-slate-200/50 rounded-2xl p-2 flex items-center justify-between shadow-xl shadow-slate-200/50">
             <div className="flex items-center gap-3 pl-4">
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">L</div>
               <span className="font-black tracking-tighter text-xl hidden sm:block">FANG-HSING</span>
             </div>
 
-            {/* Language Switcher Pill */}
             <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
               {[
                 { id: 'zh', label: 'Mandarin' },
                 { id: 'en', label: 'English' },
-                { id: 'de', label: 'Germany' } // Label as requested
+                { id: 'de', label: 'Germany' }
               ].map((l) => (
                 <button
                   key={l.id}
@@ -186,23 +204,23 @@ const App = () => {
       <section className="relative pt-48 pb-32 px-6 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] -z-10 opacity-30 blur-[100px] bg-gradient-to-br from-indigo-200 via-blue-100 to-emerald-100" />
         
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto text-center md:text-left">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 border border-indigo-100">
-              <Zap size={12} fill="currentColor" /> {t.hero.tag}
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 border border-indigo-100 mx-auto md:mx-0">
+              <Icons.Zap /> {t.hero.tag}
             </div>
-            <h1 className="text-6xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter">
+            <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter">
               {t.hero.title}
             </h1>
             <p className="text-xl text-slate-500 mb-10 leading-relaxed font-medium">
               {t.hero.subtitle}
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
               <a href="#contact" className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-indigo-600 transition-all shadow-2xl shadow-slate-200">
                 Contact Me
               </a>
               <div className="flex items-center gap-4 px-6 py-4 bg-white border border-slate-200 rounded-2xl text-slate-400">
-                <MapPin size={18} />
+                <Icons.MapPin />
                 <span className="text-sm font-bold tracking-tight text-slate-600">Taichung City, Taiwan</span>
               </div>
             </div>
@@ -218,7 +236,7 @@ const App = () => {
               <h2 className="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Journey</h2>
               <p className="text-4xl font-black tracking-tighter mb-8">{t.experience.title}</p>
               <div className="p-8 bg-slate-50 rounded-3xl border border-slate-100">
-                <Target className="text-indigo-600 mb-4" />
+                <div className="text-indigo-600 mb-4"><Icons.Target /></div>
                 <h3 className="font-bold text-lg mb-2">{t.about.title}</h3>
                 <p className="text-sm text-slate-500 leading-relaxed">{t.about.text}</p>
               </div>
@@ -233,9 +251,9 @@ const App = () => {
                     <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-widest">{item.year}</span>
                   </div>
                   <h3 className="text-2xl font-black mb-1">{item.title}</h3>
-                  <p className="text-slate-400 font-bold text-sm mb-4 uppercase tracking-tighter flex items-center gap-2">
-                    <Coffee size={14} /> {item.company}
-                  </p>
+                  <div className="text-slate-400 font-bold text-sm mb-4 uppercase tracking-tighter flex items-center gap-2">
+                    <Icons.Coffee /> {item.company}
+                  </div>
                   <p className="text-slate-600 leading-relaxed font-medium">{item.desc}</p>
                 </div>
               ))}
@@ -252,10 +270,10 @@ const App = () => {
               <h2 className="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Toolkit</h2>
               <p className="text-4xl font-black tracking-tighter">{t.skills.title}</p>
             </div>
-            <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full md:w-auto">
               {t.awards.items.map((award, i) => (
                 <div key={i} className="px-6 py-4 bg-white border border-slate-200 rounded-2xl flex items-center gap-3 shadow-sm">
-                  <Award size={18} className="text-amber-500" />
+                  <div className="text-amber-500"><Icons.Award /></div>
                   <span className="text-[10px] font-black uppercase tracking-tight text-slate-700">{award}</span>
                 </div>
               ))}
@@ -266,7 +284,7 @@ const App = () => {
             {t.skills.list.map((skill, i) => (
               <div key={i} className="p-8 bg-white border border-slate-200 rounded-[2.5rem] hover:border-indigo-500 transition-all hover:shadow-2xl hover:shadow-indigo-100 group">
                 <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-50 transition-colors">
-                  <Languages className="text-slate-400 group-hover:text-indigo-600" />
+                  <div className="text-slate-400 group-hover:text-indigo-600"><Icons.Languages /></div>
                 </div>
                 <h4 className="font-black text-xl mb-1">{skill.name}</h4>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">{skill.level}</p>
@@ -289,14 +307,14 @@ const App = () => {
               
               <div className="space-y-4">
                 <a href="mailto:tmski888@gmal.com" className="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all">
-                  <Mail className="text-indigo-400" />
+                  <div className="text-indigo-400"><Icons.Mail /></div>
                   <div>
                     <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Email Address</p>
                     <p className="font-bold">tmski888@gmal.com</p>
                   </div>
                 </a>
                 <div className="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl">
-                  <Phone className="text-emerald-400" />
+                  <div className="text-emerald-400"><Icons.Phone /></div>
                   <div>
                     <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Mobile Contact</p>
                     <p className="font-bold">(886) 967 366 194</p>
@@ -306,7 +324,9 @@ const App = () => {
             </div>
 
             <div className="relative aspect-square bg-indigo-600 rounded-[3rem] p-12 overflow-hidden flex flex-col justify-end group">
-              <Globe className="absolute top-[-50px] right-[-50px] w-64 h-64 text-indigo-500/50 group-hover:rotate-45 transition-transform duration-[2000ms]" />
+              <div className="absolute top-[-50px] right-[-50px] text-indigo-500/50 group-hover:rotate-45 transition-transform duration-[2000ms]">
+                <Icons.Globe />
+              </div>
               <h3 className="text-3xl font-black mb-4 relative z-10">Available for <br/>Professional Growth.</h3>
               <p className="text-indigo-200 font-medium relative z-10">I believe in the power of continuous learning and cultural diversity to drive innovation.</p>
             </div>
@@ -315,8 +335,8 @@ const App = () => {
           <div className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 gap-4">
             <p>© 2026 LI FANG-HSING • 李芳興</p>
             <div className="flex gap-8">
-              <span className="hover:text-white transition-colors cursor-pointer">Student ID: 3B3C7001</span>
-              <span className="hover:text-white transition-colors cursor-pointer">Taichung, Taiwan</span>
+              <span>Student ID: 3B3C7001</span>
+              <span>Taichung, Taiwan</span>
             </div>
           </div>
         </div>
