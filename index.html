@@ -1,348 +1,230 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LI FANG-HSING | Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for Interactivity (Simpler than React for single HTML) -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body x-data="portfolioData()" class="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
 
-// Safe Inline SVG Icons (No external dependencies)
-const Icons = {
-  Zap: () => (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-  ),
-  MapPin: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-  ),
-  Target: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-  ),
-  Coffee: () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-  ),
-  Award: () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-  ),
-  Languages: () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg>
-  ),
-  Mail: () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-  ),
-  Phone: () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-  ),
-  Globe: () => (
-    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-  )
-};
+    <!-- --- Floating Navbar --- -->
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300 py-6" 
+         :class="scrolled ? 'py-4' : 'py-8'"
+         @scroll.window="scrolled = (window.pageYOffset > 20)">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="bg-white/80 backdrop-blur-xl border border-slate-200/50 rounded-2xl p-2 flex items-center justify-between shadow-xl shadow-slate-200/50">
+                <div class="flex items-center gap-3 pl-4">
+                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">L</div>
+                    <span class="font-black tracking-tighter text-xl hidden sm:block">FANG-HSING</span>
+                </div>
 
-const content = {
-  en: {
-    hero: {
-      tag: "International Student & Multilingual Specialist",
-      title: "Bridging Cultures through Language and Resilience.",
-      subtitle: "A proactive student at NCUT with a passion for global integration and professional independence.",
-    },
-    about: {
-      title: "Motivation",
-      text: "I moved to Taiwan to pursue higher education and master Mandarin. My goal is to achieve financial independence while contributing to the local community through my unique multilingual background."
-    },
-    experience: {
-      title: "Cultural Journey",
-      items: [
-        {
-          year: "Current",
-          title: "Academic & Language Mastery",
-          company: "National Chin-Yi University of Technology",
-          desc: "Actively pursuing technical knowledge while refining Mandarin fluency to a professional working standard."
-        },
-        {
-          year: "Cultural Adapt",
-          title: "Cross-Cultural Integration",
-          company: "Taiwan Lifestyle Adaptation",
-          desc: "Successfully navigated culture shocks and lifestyle differences, leveraging commonalities in culinary spices and media exposure (DaAi TV) to build a home in Taichung."
-        }
-      ]
-    },
-    skills: {
-      title: "Linguistic Mastery",
-      list: [
-        { name: "Indonesian", level: "Native Proficiency", val: 100 },
-        { name: "Mandarin", level: "Professional Working Proficiency", val: 85 },
-        { name: "English", level: "Professional Working Proficiency", val: 80 },
-        { name: "German", level: "Elementary Proficiency", val: 40 }
-      ]
-    },
-    awards: {
-      title: "Certifications",
-      items: ["TOCFL A1 Certificate", "TOEIC Certification (In Progress)"]
-    }
-  },
-  zh: {
-    hero: {
-      tag: "國際學生 / 多語專業人才",
-      title: "以語言與韌性連結多元文化。",
-      subtitle: "目前就讀於國立勤益科技大學，致力於跨文化融入並追求專業獨立。",
-    },
-    about: {
-      title: "來台動機",
-      text: "為了追求更高深教育並精進普通話而來到台灣。目標是在學習的同時實現經濟獨立，並發揮多語優勢回饋社會。"
-    },
-    experience: {
-      title: "文化歷程",
-      items: [
-        {
-          year: "現在",
-          title: "學術與語言精進",
-          company: "國立勤益科技大學 (NCUT)",
-          desc: "在修習專業知識的同時，將普通話能力提升至專業工作水準。"
-        },
-        {
-          year: "適應期",
-          title: "跨文化融合",
-          company: "台灣生活適應",
-          desc: "成功克服生活習慣差異帶來的文化衝擊。透過飲食共同點（如辛香料料理）及媒體（大愛電視）迅速建立歸屬感。"
-        }
-      ]
-    },
-    skills: {
-      title: "語言能力",
-      list: [
-        { name: "印尼語", level: "母語程度", val: 100 },
-        { name: "普通話", level: "專業工作能力", val: 85 },
-        { name: "英語", level: "專業工作能力", val: 80 },
-        { name: "德語", level: "基礎對話能力", val: 40 }
-      ]
-    },
-    awards: {
-      title: "證照獎項",
-      items: ["TOCFL 華語文能力測驗 A1", "TOEIC 多益英語測驗（準備中）"]
-    }
-  },
-  de: {
-    hero: {
-      tag: "Internationaler Student & Mehrsprachiger Experte",
-      title: "Verbindung von Kulturen durch Sprache und Resilienz.",
-      subtitle: "Ein proaktiver Student an der NCUT mit einer Leidenschaft für globale Integration.",
-    },
-    about: {
-      title: "Motivation",
-      text: "Ich bin nach Taiwan gezogen, um eine höhere Ausbildung zu absolvieren und Mandarin zu meistern. Mein Ziel ist finanzielle Unabhängigkeit."
-    },
-    experience: {
-      title: "Kulturelle Reise",
-      items: [
-        {
-          year: "Aktuell",
-          title: "Akademische & Sprachliche Meisterschaft",
-          company: "National Chin-Yi University of Technology",
-          desc: "Aktives Streben nach technischem Wissen bei gleichzeitiger Verfeinerung des Mandarin."
-        },
-        {
-          year: "Anpassung",
-          title: "Interkulturelle Integration",
-          company: "Taiwan Lifestyle Anpassung",
-          desc: "Erfolgreiche Bewältigung von Kulturschocks durch die Nutzung von Gemeinsamkeiten in der Küche."
-        }
-      ]
-    },
-    skills: {
-      title: "Sprachbeherrschung",
-      list: [
-        { name: "Indonesisch", level: "Muttersprachler", val: 100 },
-        { name: "Mandarin", level: "Fließend in Wort und Schrift", val: 85 },
-        { name: "Englisch", level: "Fließend in Wort und Schrift", val: 80 },
-        { name: "Deutsch", level: "Grundkenntnisse", val: 40 }
-      ]
-    },
-    awards: {
-      title: "Zertifizierungen",
-      items: ["TOCFL A1 Zertifikat", "TOEIC Zertifizierung (In Vorbereitung)"]
-    }
-  }
-};
-
-const App = () => {
-  const [lang, setLang] = useState('en');
-  const [scrolled, setScrolled] = useState(false);
-  const t = content[lang];
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-100 selection:text-indigo-900 font-sans">
-      {/* --- Floating Navbar --- */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'py-4' : 'py-8'}`}>
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="bg-white/80 backdrop-blur-xl border border-slate-200/50 rounded-2xl p-2 flex items-center justify-between shadow-xl shadow-slate-200/50">
-            <div className="flex items-center gap-3 pl-4">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">L</div>
-              <span className="font-black tracking-tighter text-xl hidden sm:block">FANG-HSING</span>
+                <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+                    <template x-for="l in languages" :key="l.id">
+                        <button @click="lang = l.id"
+                                class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all"
+                                :class="lang === l.id ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'"
+                                x-text="l.label">
+                        </button>
+                    </template>
+                </div>
             </div>
-
-            <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
-              {[
-                { id: 'zh', label: 'Mandarin' },
-                { id: 'en', label: 'English' },
-                { id: 'de', label: 'Germany' }
-              ].map((l) => (
-                <button
-                  key={l.id}
-                  onClick={() => setLang(l.id)}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    lang === l.id ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'
-                  }`}
-                >
-                  {l.label}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
-      </nav>
+    </nav>
 
-      {/* --- Hero Section --- */}
-      <section className="relative pt-48 pb-32 px-6 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] -z-10 opacity-30 blur-[100px] bg-gradient-to-br from-indigo-200 via-blue-100 to-emerald-100" />
+    <!-- --- Hero Section --- -->
+    <section class="relative pt-48 pb-32 px-6 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] -z-10 opacity-30 blur-[100px] bg-gradient-to-br from-indigo-200 via-blue-100 to-emerald-100"></div>
         
-        <div className="max-w-6xl mx-auto text-center md:text-left">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 border border-indigo-100 mx-auto md:mx-0">
-              <Icons.Zap /> {t.hero.tag}
+        <div class="max-w-6xl mx-auto text-center md:text-left">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 border border-indigo-100 mx-auto md:mx-0">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <span x-text="t[lang].hero.tag"></span>
+                </div>
+                <h1 class="text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter" x-text="t[lang].hero.title"></h1>
+                <p class="text-xl text-slate-500 mb-10 leading-relaxed font-medium" x-text="t[lang].hero.subtitle"></p>
+                <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                    <a href="#contact" class="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-indigo-600 transition-all shadow-2xl shadow-slate-200">
+                        Contact Me
+                    </a>
+                    <div class="flex items-center gap-4 px-6 py-4 bg-white border border-slate-200 rounded-2xl text-slate-400">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <span class="text-sm font-bold tracking-tight text-slate-600">Taichung City, Taiwan</span>
+                    </div>
+                </div>
             </div>
-            <h1 className="text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter">
-              {t.hero.title}
-            </h1>
-            <p className="text-xl text-slate-500 mb-10 leading-relaxed font-medium">
-              {t.hero.subtitle}
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-              <a href="#contact" className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-indigo-600 transition-all shadow-2xl shadow-slate-200">
-                Contact Me
-              </a>
-              <div className="flex items-center gap-4 px-6 py-4 bg-white border border-slate-200 rounded-2xl text-slate-400">
-                <Icons.MapPin />
-                <span className="text-sm font-bold tracking-tight text-slate-600">Taichung City, Taiwan</span>
-              </div>
-            </div>
-          </div>
         </div>
-      </section>
+    </section>
 
-      {/* --- Experience Section --- */}
-      <section className="py-24 px-6 bg-white rounded-[4rem] shadow-sm border-y border-slate-100">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-[300px_1fr] gap-20">
-            <div>
-              <h2 className="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Journey</h2>
-              <p className="text-4xl font-black tracking-tighter mb-8">{t.experience.title}</p>
-              <div className="p-8 bg-slate-50 rounded-3xl border border-slate-100">
-                <div className="text-indigo-600 mb-4"><Icons.Target /></div>
-                <h3 className="font-bold text-lg mb-2">{t.about.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{t.about.text}</p>
-              </div>
-            </div>
-
-            <div className="space-y-12">
-              {t.experience.items.map((item, idx) => (
-                <div key={idx} className="relative pl-12 group">
-                  <div className="absolute left-0 top-0 h-full w-px bg-slate-200 group-last:h-0" />
-                  <div className="absolute left-[-5px] top-2 w-[11px] h-[11px] bg-white border-2 border-indigo-600 rounded-full z-10" />
-                  <div className="mb-2">
-                    <span className="text-[10px] font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-widest">{item.year}</span>
-                  </div>
-                  <h3 className="text-2xl font-black mb-1">{item.title}</h3>
-                  <div className="text-slate-400 font-bold text-sm mb-4 uppercase tracking-tighter flex items-center gap-2">
-                    <Icons.Coffee /> {item.company}
-                  </div>
-                  <p className="text-slate-600 leading-relaxed font-medium">{item.desc}</p>
+    <!-- --- Experience Section --- -->
+    <section class="py-24 px-6 bg-white rounded-[4rem] shadow-sm border-y border-slate-100">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-[300px_1fr] gap-20">
+                <div>
+                    <h2 class="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Journey</h2>
+                    <p class="text-4xl font-black tracking-tighter mb-8" x-text="t[lang].experience.title"></p>
+                    <div class="p-8 bg-slate-50 rounded-3xl border border-slate-100">
+                        <div class="text-indigo-600 mb-4">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2" x-text="t[lang].about.title"></h3>
+                        <p class="text-sm text-slate-500 leading-relaxed" x-text="t[lang].about.text"></p>
+                    </div>
                 </div>
-              ))}
+
+                <div class="space-y-12">
+                    <template x-for="item in t[lang].experience.items">
+                        <div class="relative pl-12 group">
+                            <div class="absolute left-0 top-0 h-full w-px bg-slate-200 group-last:h-0"></div>
+                            <div class="absolute left-[-5px] top-2 w-[11px] h-[11px] bg-white border-2 border-indigo-600 rounded-full z-10"></div>
+                            <div class="mb-2">
+                                <span class="text-[10px] font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-widest" x-text="item.year"></span>
+                            </div>
+                            <h3 class="text-2xl font-black mb-1" x-text="item.title"></h3>
+                            <div class="text-slate-400 font-bold text-sm mb-4 uppercase tracking-tighter flex items-center gap-2">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
+                                <span x-text="item.company"></span>
+                            </div>
+                            <p class="text-slate-600 leading-relaxed font-medium" x-text="item.desc"></p>
+                        </div>
+                    </template>
+                </div>
             </div>
-          </div>
         </div>
-      </section>
+    </section>
 
-      {/* --- Skills Section --- */}
-      <section className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-            <div className="max-w-xl">
-              <h2 className="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Toolkit</h2>
-              <p className="text-4xl font-black tracking-tighter">{t.skills.title}</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full md:w-auto">
-              {t.awards.items.map((award, i) => (
-                <div key={i} className="px-6 py-4 bg-white border border-slate-200 rounded-2xl flex items-center gap-3 shadow-sm">
-                  <div className="text-amber-500"><Icons.Award /></div>
-                  <span className="text-[10px] font-black uppercase tracking-tight text-slate-700">{award}</span>
+    <!-- --- Skills Section --- -->
+    <section class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+                <div class="max-w-xl">
+                    <h2 class="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Toolkit</h2>
+                    <p class="text-4xl font-black tracking-tighter" x-text="t[lang].skills.title"></p>
                 </div>
-              ))}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full md:w-auto">
+                    <template x-for="award in t[lang].awards.items">
+                        <div class="px-6 py-4 bg-white border border-slate-200 rounded-2xl flex items-center gap-3 shadow-sm">
+                            <div class="text-amber-500">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                            </div>
+                            <span class="text-[10px] font-black uppercase tracking-tight text-slate-700" x-text="award"></span>
+                        </div>
+                    </template>
+                </div>
             </div>
-          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {t.skills.list.map((skill, i) => (
-              <div key={i} className="p-8 bg-white border border-slate-200 rounded-[2.5rem] hover:border-indigo-500 transition-all hover:shadow-2xl hover:shadow-indigo-100 group">
-                <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-50 transition-colors">
-                  <div className="text-slate-400 group-hover:text-indigo-600"><Icons.Languages /></div>
-                </div>
-                <h4 className="font-black text-xl mb-1">{skill.name}</h4>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">{skill.level}</p>
-                <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-indigo-600 transition-all duration-1000 ease-out" style={{ width: `${skill.val}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <template x-for="skill in t[lang].skills.list">
+                    <div class="p-8 bg-white border border-slate-200 rounded-[2.5rem] hover:border-indigo-500 transition-all hover:shadow-2xl hover:shadow-indigo-100 group">
+                        <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-50 transition-colors">
+                            <div class="text-slate-400 group-hover:text-indigo-600">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path></svg>
+                            </div>
+                        </div>
+                        <h4 class="font-black text-xl mb-1" x-text="skill.name"></h4>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6" x-text="skill.level"></p>
+                        <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-600 transition-all duration-1000 ease-out" :style="`width: ${skill.val}%`"></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
         </div>
-      </section>
+    </section>
 
-      {/* --- Footer / Contact --- */}
-      <footer id="contact" className="py-24 px-6 bg-slate-900 text-white rounded-t-[4rem]">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <div>
-              <h2 className="text-5xl font-black mb-8 tracking-tighter leading-tight">Let's build something international.</h2>
-              <p className="text-slate-400 text-lg mb-12 font-medium">Currently seeking opportunities in engineering assistant roles, translation, or international business coordination in Taichung.</p>
-              
-              <div className="space-y-4">
-                <a href="mailto:tmski888@gmal.com" className="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all">
-                  <div className="text-indigo-400"><Icons.Mail /></div>
-                  <div>
-                    <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Email Address</p>
-                    <p className="font-bold">tmski888@gmal.com</p>
-                  </div>
-                </a>
-                <div className="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl">
-                  <div className="text-emerald-400"><Icons.Phone /></div>
-                  <div>
-                    <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Mobile Contact</p>
-                    <p className="font-bold">(886) 967 366 194</p>
-                  </div>
+    <!-- --- Footer / Contact --- -->
+    <footer id="contact" class="py-24 px-6 bg-slate-900 text-white rounded-t-[4rem]">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div>
+                    <h2 class="text-5xl font-black mb-8 tracking-tighter leading-tight">Let's build something international.</h2>
+                    <p class="text-slate-400 text-lg mb-12 font-medium">Currently seeking opportunities in engineering assistant roles, translation, or international business coordination in Taichung.</p>
+                    
+                    <div class="space-y-4 text-white">
+                        <a href="mailto:tmski888@gmal.com" class="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all">
+                            <div class="text-indigo-400">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Email Address</p>
+                                <p class="font-bold">tmski888@gmal.com</p>
+                            </div>
+                        </a>
+                        <div class="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl">
+                            <div class="text-emerald-400">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Mobile Contact</p>
+                                <p class="font-bold">(886) 967 366 194</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+
+                <div class="relative aspect-square bg-indigo-600 rounded-[3rem] p-12 overflow-hidden flex flex-col justify-end">
+                    <div class="absolute top-[-50px] right-[-50px] text-indigo-500/50">
+                        <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <h3 class="text-3xl font-black mb-4 relative z-10">Available for <br>Professional Growth.</h3>
+                    <p class="text-indigo-200 font-medium relative z-10">I believe in the power of continuous learning and cultural diversity to drive innovation.</p>
+                </div>
             </div>
 
-            <div className="relative aspect-square bg-indigo-600 rounded-[3rem] p-12 overflow-hidden flex flex-col justify-end group">
-              <div className="absolute top-[-50px] right-[-50px] text-indigo-500/50 group-hover:rotate-45 transition-transform duration-[2000ms]">
-                <Icons.Globe />
-              </div>
-              <h3 className="text-3xl font-black mb-4 relative z-10">Available for <br/>Professional Growth.</h3>
-              <p className="text-indigo-200 font-medium relative z-10">I believe in the power of continuous learning and cultural diversity to drive innovation.</p>
+            <div class="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 gap-4">
+                <p>© 2026 LI FANG-HSING • 李芳興</p>
+                <div class="flex gap-8">
+                    <span>Student ID: 3B3C7001</span>
+                    <span>Taichung, Taiwan</span>
+                </div>
             </div>
-          </div>
-
-          <div className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 gap-4">
-            <p>© 2026 LI FANG-HSING • 李芳興</p>
-            <div className="flex gap-8">
-              <span>Student ID: 3B3C7001</span>
-              <span>Taichung, Taiwan</span>
-            </div>
-          </div>
         </div>
-      </footer>
-    </div>
-  );
-};
+    </footer>
 
-export default App;
+    <script>
+        function portfolioData() {
+            return {
+                lang: 'en',
+                scrolled: false,
+                languages: [
+                    { id: 'zh', label: 'Mandarin' },
+                    { id: 'en', label: 'English' },
+                    { id: 'de', label: 'Germany' }
+                ],
+                t: {
+                    en: {
+                        hero: { tag: "International Student", title: "Bridging Cultures through Language.", subtitle: "Student at NCUT with a passion for global integration." },
+                        about: { title: "Motivation", text: "Pursuing education and Mandarin mastery in Taiwan." },
+                        experience: { title: "Journey", items: [{ year: "Current", title: "Academic Mastery", company: "NCUT", desc: "Studying technical knowledge." }, { year: "Adapt", title: "Integration", company: "Taiwan Life", desc: "Building a home in Taichung." }] },
+                        skills: { title: "Linguistic Mastery", list: [{ name: "Indonesian", level: "Native", val: 100 }, { name: "Mandarin", level: "Professional", val: 85 }, { name: "English", level: "Professional", val: 80 }, { name: "German", level: "Elementary", val: 40 }] },
+                        awards: { title: "Certs", items: ["TOCFL A1", "TOEIC (In Progress)"] }
+                    },
+                    zh: {
+                        hero: { tag: "國際學生", title: "以語言連結文化。", subtitle: "國立勤益科技大學學生，致力於跨文化融入。" },
+                        about: { title: "動機", text: "在台灣追求高深教育與語言精進。" },
+                        experience: { title: "歷程", items: [{ year: "現在", title: "學術精進", company: "勤益科大", desc: "修習專業知識。" }, { year: "適應", title: "文化融合", company: "台灣生活", desc: "在台中建立歸屬感。" }] },
+                        skills: { title: "語言能力", list: [{ name: "印尼語", level: "母語", val: 100 }, { name: "普通話", level: "專業", val: 85 }, { name: "英語", level: "專業", val: 80 }, { name: "德語", level: "基礎", val: 40 }] },
+                        awards: { title: "證照", items: ["TOCFL A1", "TOEIC 準備中"] }
+                    },
+                    de: {
+                        hero: { tag: "Internationaler Student", title: "Kulturen verbinden.", subtitle: "Student an der NCUT mit Leidenschaft für Integration." },
+                        about: { title: "Motivation", text: "Ausbildung und Mandarin-Beherrschung in Taiwan." },
+                        experience: { title: "Reise", items: [{ year: "Aktuell", title: "Akademik", company: "NCUT", desc: "Technisches Wissen erwerben." }, { year: "Anpassung", title: "Integration", company: "Taiwan Lifestyle", desc: "Ein Zuhause in Taichung bauen." }] },
+                        skills: { title: "Sprachen", list: [{ name: "Indonesisch", level: "Muttersprache", val: 100 }, { name: "Mandarin", level: "Fließend", val: 85 }, { name: "Englisch", level: "Fließend", val: 80 }, { name: "Deutsch", level: "Grundkenntnisse", val: 40 }] },
+                        awards: { title: "Zertifikate", items: ["TOCFL A1", "TOEIC In Vorbereitung"] }
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
