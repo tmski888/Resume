@@ -1,230 +1,441 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LI FANG-HSING | Portfolio</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js for Interactivity (Simpler than React for single HTML) -->
-    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        [x-cloak] { display: none !important; }
-    </style>
-</head>
-<body x-data="portfolioData()" class="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
+import React, { useState, useEffect } from 'react';
+import { 
+  MapPin, Mail, Phone, GraduationCap, Languages, 
+  Award, Plane, Tv, Utensils, Zap, Heart, Map, 
+  ChevronRight, ExternalLink 
+} from 'lucide-react';
 
-    <!-- --- Floating Navbar --- -->
-    <nav class="fixed top-0 w-full z-50 transition-all duration-300 py-6" 
-         :class="scrolled ? 'py-4' : 'py-8'"
-         @scroll.window="scrolled = (window.pageYOffset > 20)">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="bg-white/80 backdrop-blur-xl border border-slate-200/50 rounded-2xl p-2 flex items-center justify-between shadow-xl shadow-slate-200/50">
-                <div class="flex items-center gap-3 pl-4">
-                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">L</div>
-                    <span class="font-black tracking-tighter text-xl hidden sm:block">FANG-HSING</span>
-                </div>
-
-                <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
-                    <template x-for="l in languages" :key="l.id">
-                        <button @click="lang = l.id"
-                                class="px-4 py-1.5 rounded-lg text-xs font-bold transition-all"
-                                :class="lang === l.id ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-900'"
-                                x-text="l.label">
-                        </button>
-                    </template>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- --- Hero Section --- -->
-    <section class="relative pt-48 pb-32 px-6 overflow-hidden">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] -z-10 opacity-30 blur-[100px] bg-gradient-to-br from-indigo-200 via-blue-100 to-emerald-100"></div>
-        
-        <div class="max-w-6xl mx-auto text-center md:text-left">
-            <div class="max-w-3xl">
-                <div class="inline-flex items-center gap-2 px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-[10px] font-black uppercase tracking-widest mb-8 border border-indigo-100 mx-auto md:mx-0">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                    <span x-text="t[lang].hero.tag"></span>
-                </div>
-                <h1 class="text-5xl md:text-8xl font-black mb-8 leading-[0.9] tracking-tighter" x-text="t[lang].hero.title"></h1>
-                <p class="text-xl text-slate-500 mb-10 leading-relaxed font-medium" x-text="t[lang].hero.subtitle"></p>
-                <div class="flex flex-wrap gap-4 justify-center md:justify-start">
-                    <a href="#contact" class="px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-indigo-600 transition-all shadow-2xl shadow-slate-200">
-                        Contact Me
-                    </a>
-                    <div class="flex items-center gap-4 px-6 py-4 bg-white border border-slate-200 rounded-2xl text-slate-400">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        <span class="text-sm font-bold tracking-tight text-slate-600">Taichung City, Taiwan</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- --- Experience Section --- -->
-    <section class="py-24 px-6 bg-white rounded-[4rem] shadow-sm border-y border-slate-100">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid md:grid-cols-[300px_1fr] gap-20">
-                <div>
-                    <h2 class="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Journey</h2>
-                    <p class="text-4xl font-black tracking-tighter mb-8" x-text="t[lang].experience.title"></p>
-                    <div class="p-8 bg-slate-50 rounded-3xl border border-slate-100">
-                        <div class="text-indigo-600 mb-4">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
-                        </div>
-                        <h3 class="font-bold text-lg mb-2" x-text="t[lang].about.title"></h3>
-                        <p class="text-sm text-slate-500 leading-relaxed" x-text="t[lang].about.text"></p>
-                    </div>
-                </div>
-
-                <div class="space-y-12">
-                    <template x-for="item in t[lang].experience.items">
-                        <div class="relative pl-12 group">
-                            <div class="absolute left-0 top-0 h-full w-px bg-slate-200 group-last:h-0"></div>
-                            <div class="absolute left-[-5px] top-2 w-[11px] h-[11px] bg-white border-2 border-indigo-600 rounded-full z-10"></div>
-                            <div class="mb-2">
-                                <span class="text-[10px] font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full uppercase tracking-widest" x-text="item.year"></span>
-                            </div>
-                            <h3 class="text-2xl font-black mb-1" x-text="item.title"></h3>
-                            <div class="text-slate-400 font-bold text-sm mb-4 uppercase tracking-tighter flex items-center gap-2">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path></svg>
-                                <span x-text="item.company"></span>
-                            </div>
-                            <p class="text-slate-600 leading-relaxed font-medium" x-text="item.desc"></p>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- --- Skills Section --- -->
-    <section class="py-24 px-6">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-                <div class="max-w-xl">
-                    <h2 class="text-xs font-black text-indigo-600 uppercase tracking-[0.3em] mb-4">Toolkit</h2>
-                    <p class="text-4xl font-black tracking-tighter" x-text="t[lang].skills.title"></p>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full md:w-auto">
-                    <template x-for="award in t[lang].awards.items">
-                        <div class="px-6 py-4 bg-white border border-slate-200 rounded-2xl flex items-center gap-3 shadow-sm">
-                            <div class="text-amber-500">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                            </div>
-                            <span class="text-[10px] font-black uppercase tracking-tight text-slate-700" x-text="award"></span>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <template x-for="skill in t[lang].skills.list">
-                    <div class="p-8 bg-white border border-slate-200 rounded-[2.5rem] hover:border-indigo-500 transition-all hover:shadow-2xl hover:shadow-indigo-100 group">
-                        <div class="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-indigo-50 transition-colors">
-                            <div class="text-slate-400 group-hover:text-indigo-600">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 8 6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path></svg>
-                            </div>
-                        </div>
-                        <h4 class="font-black text-xl mb-1" x-text="skill.name"></h4>
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6" x-text="skill.level"></p>
-                        <div class="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
-                            <div class="h-full bg-indigo-600 transition-all duration-1000 ease-out" :style="`width: ${skill.val}%`"></div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-        </div>
-    </section>
-
-    <!-- --- Footer / Contact --- -->
-    <footer id="contact" class="py-24 px-6 bg-slate-900 text-white rounded-t-[4rem]">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid lg:grid-cols-2 gap-20 items-center">
-                <div>
-                    <h2 class="text-5xl font-black mb-8 tracking-tighter leading-tight">Let's build something international.</h2>
-                    <p class="text-slate-400 text-lg mb-12 font-medium">Currently seeking opportunities in engineering assistant roles, translation, or international business coordination in Taichung.</p>
-                    
-                    <div class="space-y-4 text-white">
-                        <a href="mailto:tmski888@gmal.com" class="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all">
-                            <div class="text-indigo-400">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Email Address</p>
-                                <p class="font-bold">tmski888@gmal.com</p>
-                            </div>
-                        </a>
-                        <div class="flex items-center gap-4 p-6 bg-white/5 border border-white/10 rounded-2xl">
-                            <div class="text-emerald-400">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                            </div>
-                            <div>
-                                <p class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Mobile Contact</p>
-                                <p class="font-bold">(886) 967 366 194</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative aspect-square bg-indigo-600 rounded-[3rem] p-12 overflow-hidden flex flex-col justify-end">
-                    <div class="absolute top-[-50px] right-[-50px] text-indigo-500/50">
-                        <svg width="200" height="200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                    </div>
-                    <h3 class="text-3xl font-black mb-4 relative z-10">Available for <br>Professional Growth.</h3>
-                    <p class="text-indigo-200 font-medium relative z-10">I believe in the power of continuous learning and cultural diversity to drive innovation.</p>
-                </div>
-            </div>
-
-            <div class="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] font-black uppercase tracking-[0.3em] text-slate-600 gap-4">
-                <p>© 2026 LI FANG-HSING • 李芳興</p>
-                <div class="flex gap-8">
-                    <span>Student ID: 3B3C7001</span>
-                    <span>Taichung, Taiwan</span>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        function portfolioData() {
-            return {
-                lang: 'en',
-                scrolled: false,
-                languages: [
-                    { id: 'zh', label: 'Mandarin' },
-                    { id: 'en', label: 'English' },
-                    { id: 'de', label: 'Germany' }
-                ],
-                t: {
-                    en: {
-                        hero: { tag: "International Student", title: "Bridging Cultures through Language.", subtitle: "Student at NCUT with a passion for global integration." },
-                        about: { title: "Motivation", text: "Pursuing education and Mandarin mastery in Taiwan." },
-                        experience: { title: "Journey", items: [{ year: "Current", title: "Academic Mastery", company: "NCUT", desc: "Studying technical knowledge." }, { year: "Adapt", title: "Integration", company: "Taiwan Life", desc: "Building a home in Taichung." }] },
-                        skills: { title: "Linguistic Mastery", list: [{ name: "Indonesian", level: "Native", val: 100 }, { name: "Mandarin", level: "Professional", val: 85 }, { name: "English", level: "Professional", val: 80 }, { name: "German", level: "Elementary", val: 40 }] },
-                        awards: { title: "Certs", items: ["TOCFL A1", "TOEIC (In Progress)"] }
-                    },
-                    zh: {
-                        hero: { tag: "國際學生", title: "以語言連結文化。", subtitle: "國立勤益科技大學學生，致力於跨文化融入。" },
-                        about: { title: "動機", text: "在台灣追求高深教育與語言精進。" },
-                        experience: { title: "歷程", items: [{ year: "現在", title: "學術精進", company: "勤益科大", desc: "修習專業知識。" }, { year: "適應", title: "文化融合", company: "台灣生活", desc: "在台中建立歸屬感。" }] },
-                        skills: { title: "語言能力", list: [{ name: "印尼語", level: "母語", val: 100 }, { name: "普通話", level: "專業", val: 85 }, { name: "英語", level: "專業", val: 80 }, { name: "德語", level: "基礎", val: 40 }] },
-                        awards: { title: "證照", items: ["TOCFL A1", "TOEIC 準備中"] }
-                    },
-                    de: {
-                        hero: { tag: "Internationaler Student", title: "Kulturen verbinden.", subtitle: "Student an der NCUT mit Leidenschaft für Integration." },
-                        about: { title: "Motivation", text: "Ausbildung und Mandarin-Beherrschung in Taiwan." },
-                        experience: { title: "Reise", items: [{ year: "Aktuell", title: "Akademik", company: "NCUT", desc: "Technisches Wissen erwerben." }, { year: "Anpassung", title: "Integration", company: "Taiwan Lifestyle", desc: "Ein Zuhause in Taichung bauen." }] },
-                        skills: { title: "Sprachen", list: [{ name: "Indonesisch", level: "Muttersprache", val: 100 }, { name: "Mandarin", level: "Fließend", val: 85 }, { name: "Englisch", level: "Fließend", val: 80 }, { name: "Deutsch", level: "Grundkenntnisse", val: 40 }] },
-                        awards: { title: "Zertifikate", items: ["TOCFL A1", "TOEIC In Vorbereitung"] }
-                    }
-                }
-            }
+// --- TRANSLATIONS & DATA ---
+const content = {
+  en: {
+    nav: { home: 'Home', experience: 'Experience', skills: 'Skills & Awards', favorites: 'Favorites' },
+    hero: {
+      greeting: "Hello, I'm",
+      name: "Li Fangxing",
+      role: "Student & Cultural Explorer",
+      desc: "Navigating new cultures, learning new languages, and building an independent future in Taiwan.",
+      contact: "Get in touch",
+      id: "Student ID:"
+    },
+    experience: {
+      title: "My Taiwan Journey",
+      subtitle: "The Experience",
+      items: [
+        {
+          id: 'motivation',
+          icon: <Plane className="w-5 h-5" />,
+          title: "The Motivation",
+          desc: "I came to Taiwan primarily for education and self-improvement. My goal is to acquire knowledge, master Mandarin, and eventually find opportunities to earn a living, fostering an independent lifestyle. Taiwan is my chosen ground for learning and growth."
+        },
+        {
+          id: 'impressions',
+          icon: <Tv className="w-5 h-5" />,
+          title: "First Impressions",
+          desc: "Before arriving, my image of Taiwan was shaped by television and the internet. Watching DaAi TV and Sanlih E-Television gave me a glimpse into Taiwanese culture and lifestyles, creating a strong sense of familiarity before I even landed."
+        },
+        {
+          id: 'reality',
+          icon: <Utensils className="w-5 h-5" />,
+          title: "Reality vs. Imagination",
+          desc: "Upon arrival, I found many things matched my expectations, but with delightful surprises. Surprisingly, the flavor profiles of many Taiwanese dishes share similarities with Indonesian cuisine—especially the use of spices—making my adaptation much easier."
+        },
+        {
+          id: 'shock',
+          icon: <Zap className="w-5 h-5" />,
+          title: "Culture Shock",
+          desc: "The biggest culture shock was encountering different daily habits. For instance, realizing some people don't brush their teeth or shower first thing in the morning was hard to get used to. However, the incredible food scene quickly made up for any lifestyle shocks."
         }
-    </script>
-</body>
-</html>
+      ]
+    },
+    skills: {
+      title: "Skills & Qualifications",
+      languages: "Languages",
+      langs: [
+        { name: "Indonesian", level: "Native" },
+        { name: "English", level: "Fluent" },
+        { name: "Mandarin", level: "Intermediate" },
+        { name: "German", level: "Basic" }
+      ],
+      awards: "Certifications",
+      certs: [
+        { name: "TOCFL Certificate", level: "Level A1 Achieved" },
+        { name: "TOEIC", level: "Coming Soon" }
+      ]
+    },
+    favorites: {
+      title: "Taiwanese Favorites",
+      cultureFood: {
+        title: "Favorite Culture & Food",
+        desc: "Despite the initial culture shocks, I've fallen in love with the local lifestyle and street food. My absolute favorites are Chicken Cutlet (雞排) and Stinky Tofu (臭豆腐)."
+      },
+      travel: {
+        title: "Travel Recommendation",
+        desc: "If I could take my family anywhere, it would be Taitung. The stunning natural landscapes, featuring both magnificent mountains and the beautiful ocean, make it an unforgettable destination."
+      }
+    }
+  },
+  zh: {
+    nav: { home: '首頁', experience: '經歷', skills: '技能與獎項', favorites: '最愛' },
+    hero: {
+      greeting: "你好，我是",
+      name: "李芳興",
+      role: "學生與文化探索者",
+      desc: "在台灣探索新文化、學習新語言，並為獨立的未來打下基礎。",
+      contact: "聯絡我",
+      id: "學號:"
+    },
+    experience: {
+      title: "我的台灣之旅",
+      subtitle: "生活體驗",
+      items: [
+        {
+          id: 'motivation',
+          icon: <Plane className="w-5 h-5" />,
+          title: "來台動機",
+          desc: "我來台灣的原因主要是為了上學和提升自己，我希望能在這裡獲得更多知識，同時學習中文（普通話）。除此之外，我也希望未來可以有機會在這裡賺錢，讓自己的生活更加獨立。台灣對我來說是一個可以學習與成長的地方。"
+        },
+        {
+          id: 'impressions',
+          icon: <Tv className="w-5 h-5" />,
+          title: "來台前的印象",
+          desc: "在來台灣之前，我對台灣的印象大多來自電視和網路。我常常看大愛電視 (DaAi TV) 以及台灣三立電視台的節目，從中了解台灣的文化與生活方式，因此對台灣有一種很親切的感覺。"
+        },
+        {
+          id: 'reality',
+          icon: <Utensils className="w-5 h-5" />,
+          title: "實際與想像的差異",
+          desc: "來到台灣之後，我發現有些地方和我原本想像的一樣，但也有不同的地方。例如，台灣有些食物的味道和印尼很像，特別是帶有香料的料理，讓我覺得很熟悉，也比較容易適應。"
+        },
+        {
+          id: 'shock',
+          icon: <Zap className="w-5 h-5" />,
+          title: "文化衝擊",
+          desc: "來到台灣後，讓我感到衝擊最大的是生活習慣的不同。例如有些人早上不刷牙，也不在早上洗澡，這點讓我比較難接受。不過在飲食方面，我沒有太多不適應，反而覺得很多食物都很好吃。"
+        }
+      ]
+    },
+    skills: {
+      title: "技能與資格",
+      languages: "語言能力",
+      langs: [
+        { name: "印尼語", level: "母語" },
+        { name: "英語", level: "流利" },
+        { name: "中文", level: "中等" },
+        { name: "德語", level: "基礎" }
+      ],
+      awards: "證書與獎項",
+      certs: [
+        { name: "TOCFL 華語文能力測驗", level: "已取得 A1 證書" },
+        { name: "TOEIC 多益測驗", level: "即將取得" }
+      ]
+    },
+    favorites: {
+      title: "台灣最愛",
+      cultureFood: {
+        title: "喜歡的文化與飲食",
+        desc: "在台灣生活後，我最喜歡的是這裡的一些生活方式和美食。雖然有些人沒有早上洗澡的習慣，但我還是很喜歡台灣的小吃，尤其是雞排和臭豆腐，這些都是我非常喜歡的食物。"
+      },
+      travel: {
+        title: "推薦旅遊地點",
+        desc: "如果有機會，我最想帶家人去台東旅遊。因為台東有美麗的自然風景，有海也有山，景色非常壯觀。我覺得台東是一個很值得去的地方，希望可以和家人一起去那裡旅行。"
+      }
+    }
+  },
+  de: {
+    nav: { home: 'Start', experience: 'Erfahrung', skills: 'Fähigkeiten', favorites: 'Favoriten' },
+    hero: {
+      greeting: "Hallo, ich bin",
+      name: "Li Fangxing",
+      role: "Student & Kulturentdecker",
+      desc: "Ich entdecke neue Kulturen, lerne Sprachen und baue mir eine unabhängige Zukunft in Taiwan auf.",
+      contact: "Kontakt",
+      id: "Matrikelnummer:"
+    },
+    experience: {
+      title: "Meine Taiwan-Reise",
+      subtitle: "Die Erfahrung",
+      items: [
+        {
+          id: 'motivation',
+          icon: <Plane className="w-5 h-5" />,
+          title: "Die Motivation",
+          desc: "Ich bin hauptsächlich für meine Ausbildung und persönliche Weiterentwicklung nach Taiwan gekommen. Mein Ziel ist es, Wissen zu erlangen, Mandarin zu lernen und schließlich Möglichkeiten zu finden, meinen Lebensunterhalt zu verdienen und unabhängig zu werden."
+        },
+        {
+          id: 'impressions',
+          icon: <Tv className="w-5 h-5" />,
+          title: "Erste Eindrücke",
+          desc: "Vor meiner Ankunft wurde mein Bild von Taiwan durch Fernsehen und das Internet geprägt. Das Anschauen von DaAi TV und Sanlih E-Television gab mir Einblicke in die taiwanische Kultur und vermittelte mir ein Gefühl der Vertrautheit."
+        },
+        {
+          id: 'reality',
+          icon: <Utensils className="w-5 h-5" />,
+          title: "Realität vs. Vorstellung",
+          desc: "Nach meiner Ankunft stellte ich fest, dass viele Dinge meinen Erwartungen entsprachen, es aber auch schöne Überraschungen gab. Erstaunlicherweise ähneln die Geschmacksprofile vieler taiwanischer Gerichte der indonesischen Küche – insbesondere die Verwendung von Gewürzen –, was mir die Eingewöhnung sehr erleichterte."
+        },
+        {
+          id: 'shock',
+          icon: <Zap className="w-5 h-5" />,
+          title: "Kulturschock",
+          desc: "Der größte Kulturschock war die Begegnung mit anderen Alltagsgewohnheiten. Dass manche Menschen sich morgens als Erstes nicht die Zähne putzen oder duschen, war schwer gewöhnungsbedürftig. Das unglaubliche Essen machte diese Lebensstilschocks jedoch schnell wieder wett."
+        }
+      ]
+    },
+    skills: {
+      title: "Fähigkeiten & Qualifikationen",
+      languages: "Sprachen",
+      langs: [
+        { name: "Indonesisch", level: "Muttersprache" },
+        { name: "Englisch", level: "Fließend" },
+        { name: "Mandarin", level: "Mittelstufe" },
+        { name: "Deutsch", level: "Grundkenntnisse" }
+      ],
+      awards: "Zertifizierungen",
+      certs: [
+        { name: "TOCFL Zertifikat", level: "Niveau A1 erreicht" },
+        { name: "TOEIC", level: "Demnächst" }
+      ]
+    },
+    favorites: {
+      title: "Taiwan-Favoriten",
+      cultureFood: {
+        title: "Lieblingskultur & Essen",
+        desc: "Trotz anfänglicher Kulturschocks habe ich mich in den lokalen Lebensstil und das Streetfood verliebt. Meine absoluten Favoriten sind Hähnchenschnitzel (Ji Pai) und Stinkender Tofu."
+      },
+      travel: {
+        title: "Reiseempfehlung",
+        desc: "Wenn ich meine Familie an einen Ort bringen könnte, wäre es Taitung. Die atemberaubenden Naturlandschaften mit ihren herrlichen Bergen und dem wunderschönen Ozean machen es zu einem unvergesslichen Reiseziel."
+      }
+    }
+  }
+};
+
+export default function App() {
+  const [lang, setLang] = useState('en');
+  const t = content[lang];
+  const [activeSection, setActiveSection] = useState('home');
+
+  // Handle scroll spy
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'experience', 'skills', 'favorites'];
+      let current = '';
+      for (let section of sections) {
+        const element = document.getElementById(section);
+        if (element && window.scrollY >= element.offsetTop - 200) {
+          current = section;
+        }
+      }
+      setActiveSection(current || 'home');
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-emerald-500/30">
+      
+      {/* Background Effects */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-600/10 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/10 blur-[120px]" />
+      </div>
+
+      {/* Simplified Language Switcher Pill */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-slate-900/80 backdrop-blur-xl border border-white/10 p-1.5 rounded-full flex gap-1 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all">
+        {[
+          { id: 'zh', label: '中文' },
+          { id: 'en', label: 'ENG' },
+          { id: 'de', label: 'DEU' }
+        ].map(l => (
+          <button
+            key={l.id}
+            onClick={() => setLang(l.id)}
+            className={`px-5 py-2 rounded-full text-xs sm:text-sm font-semibold tracking-wide transition-all duration-300 ${
+              lang === l.id 
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-white shadow-lg' 
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-6 pt-24 pb-40 flex flex-col gap-32">
+        
+        {/* HERO SECTION */}
+        <section id="home" className="flex flex-col md:flex-row gap-12 items-center min-h-[70vh] justify-center">
+          <div className="flex-1 space-y-6 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-emerald-400 text-sm font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              {t.hero.greeting}
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-white">
+              {t.hero.name}
+            </h1>
+            <h2 className="text-2xl md:text-3xl font-light text-slate-400">
+              {t.hero.role}
+            </h2>
+            <p className="text-lg text-slate-400 leading-relaxed max-w-xl mx-auto md:mx-0">
+              {t.hero.desc}
+            </p>
+            
+            <div className="flex flex-wrap justify-center md:justify-start gap-4 pt-4">
+              <a href="mailto:tmski888@gmail.com" className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-slate-950 font-semibold hover:bg-slate-200 transition-colors">
+                <Mail className="w-4 h-4" /> {t.hero.contact}
+              </a>
+              <div className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-300">
+                <GraduationCap className="w-4 h-4" /> {t.hero.id} 3B3C7001
+              </div>
+            </div>
+          </div>
+          
+          <div className="w-full md:w-1/3 flex flex-col gap-4 text-sm text-slate-400">
+            <div className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center gap-4 hover:bg-white/10 transition-colors">
+              <div className="bg-emerald-500/20 p-3 rounded-xl text-emerald-400"><MapPin className="w-5 h-5"/></div>
+              <div>
+                <p className="text-white font-medium">Location</p>
+                <p>Taiping Dist, Taichung City, Taiwan (420)</p>
+              </div>
+            </div>
+            <div className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center gap-4 hover:bg-white/10 transition-colors">
+              <div className="bg-blue-500/20 p-3 rounded-xl text-blue-400"><Phone className="w-5 h-5"/></div>
+              <div>
+                <p className="text-white font-medium">Phone</p>
+                <p>+886 967366194</p>
+              </div>
+            </div>
+            <div className="bg-white/5 border border-white/10 p-5 rounded-2xl flex items-center gap-4 hover:bg-white/10 transition-colors">
+              <div className="bg-purple-500/20 p-3 rounded-xl text-purple-400"><Mail className="w-5 h-5"/></div>
+              <div>
+                <p className="text-white font-medium">Email</p>
+                <p>tmski888@gmail.com</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* EXPERIENCE TIMELINE */}
+        <section id="experience" className="space-y-16">
+          <div className="text-center space-y-4">
+            <h3 className="text-emerald-400 font-semibold tracking-wider uppercase text-sm">{t.experience.subtitle}</h3>
+            <h2 className="text-3xl md:text-5xl font-bold text-white">{t.experience.title}</h2>
+          </div>
+          
+          <div className="relative max-w-4xl mx-auto">
+            {/* Vertical Line */}
+            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-emerald-500/50 via-teal-500/20 to-transparent -translate-x-1/2"></div>
+            
+            <div className="space-y-12">
+              {t.experience.items.map((item, index) => (
+                <div key={item.id} className={`relative flex flex-col md:flex-row gap-8 items-start ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                  {/* Center Node */}
+                  <div className="absolute left-4 md:left-1/2 w-10 h-10 rounded-full bg-slate-900 border-2 border-emerald-500 text-emerald-400 flex items-center justify-center -translate-x-1/2 shadow-[0_0_15px_rgba(16,185,129,0.3)] z-10">
+                    {item.icon}
+                  </div>
+                  
+                  {/* Content Box */}
+                  <div className={`w-full md:w-1/2 pl-12 md:pl-0 ${index % 2 === 0 ? 'md:pr-12 text-left md:text-right' : 'md:pl-12 text-left'}`}>
+                    <div className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-3xl hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 group">
+                      <h4 className="text-xl font-bold text-white mb-3 group-hover:text-emerald-300 transition-colors">{item.title}</h4>
+                      <p className="text-slate-400 leading-relaxed text-sm md:text-base">
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* SKILLS & AWARDS */}
+        <section id="skills" className="space-y-16">
+           <div className="text-center space-y-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-white">{t.skills.title}</h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Languages */}
+            <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-white/10 rounded-3xl p-8">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="bg-blue-500/20 p-3 rounded-xl text-blue-400"><Languages className="w-6 h-6"/></div>
+                <h3 className="text-2xl font-semibold text-white">{t.skills.languages}</h3>
+              </div>
+              <div className="space-y-4">
+                {t.skills.langs.map((langItem, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/20 transition-colors">
+                    <span className="font-medium text-slate-200">{langItem.name}</span>
+                    <span className="text-sm px-3 py-1 rounded-full bg-white/10 text-slate-300">{langItem.level}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Awards */}
+            <div className="bg-gradient-to-bl from-slate-900 to-slate-800 border border-white/10 rounded-3xl p-8">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="bg-amber-500/20 p-3 rounded-xl text-amber-400"><Award className="w-6 h-6"/></div>
+                <h3 className="text-2xl font-semibold text-white">{t.skills.awards}</h3>
+              </div>
+              <div className="space-y-4">
+                {t.skills.certs.map((cert, idx) => (
+                  <div key={idx} className="group flex flex-col gap-2 p-5 rounded-2xl bg-white/5 border border-white/5 hover:border-amber-500/30 transition-colors relative overflow-hidden">
+                    <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                      <Award className="w-24 h-24" />
+                    </div>
+                    <span className="font-bold text-lg text-white z-10">{cert.name}</span>
+                    <span className="text-sm text-amber-400 font-medium z-10">{cert.level}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAVORITES & RECOMMENDATIONS */}
+        <section id="favorites" className="space-y-16">
+          <div className="text-center space-y-4">
+             <h2 className="text-3xl md:text-5xl font-bold text-white">{t.favorites.title}</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10 hover:border-pink-500/50 transition-all duration-500">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/90 z-10"></div>
+              {/* Abstract pattern background to replace image */}
+              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-pink-500 via-purple-500 to-slate-900 scale-110 group-hover:scale-100 transition-transform duration-700"></div>
+              
+              <div className="relative z-20 p-8 h-full flex flex-col justify-end min-h-[300px]">
+                <div className="bg-pink-500/20 w-12 h-12 rounded-full flex items-center justify-center text-pink-400 mb-6 backdrop-blur-md">
+                  <Heart className="w-6 h-6" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">{t.favorites.cultureFood.title}</h3>
+                <p className="text-slate-300 leading-relaxed">
+                  {t.favorites.cultureFood.desc}
+                </p>
+              </div>
+            </div>
+
+            <div className="group relative rounded-3xl overflow-hidden bg-slate-900 border border-white/10 hover:border-cyan-500/50 transition-all duration-500">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-950/90 z-10"></div>
+              {/* Abstract pattern background to replace image */}
+              <div className="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-cyan-400 via-blue-500 to-slate-900 scale-110 group-hover:scale-100 transition-transform duration-700"></div>
+              
+              <div className="relative z-20 p-8 h-full flex flex-col justify-end min-h-[300px]">
+                <div className="bg-cyan-500/20 w-12 h-12 rounded-full flex items-center justify-center text-cyan-400 mb-6 backdrop-blur-md">
+                  <Map className="w-6 h-6" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">{t.favorites.travel.title}</h3>
+                <p className="text-slate-300 leading-relaxed">
+                  {t.favorites.travel.desc}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  );
+}
