@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Security Headers -->
+    <!-- Content Security Policy: Membatasi sumber skrip dan gaya untuk mencegah injeksi berbahaya -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    
+    <!-- X-Frame-Options: Mencegah Clickjacking -->
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    
+    <!-- X-Content-Type-Options: Mencegah MIME-sniffing -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+
     <title>Li Fangxing - Portfolio</title>
     
     <!-- Tailwind CSS -->
